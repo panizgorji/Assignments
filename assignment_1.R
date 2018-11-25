@@ -1,7 +1,6 @@
 #start the assignment
 # I made some changes to the responses after the commit for each question
 # so the final version might be different from the individual commit for each questtion
-#add libraries
 
 #add libraries
 library(tidyverse)
@@ -52,7 +51,8 @@ data_byCountry <- data %>%
 # Q5 ----------------------------------------------------------------------
 
 ggplot(data_byCountry, aes(x=country,y=range_worth))+
-  geom_bar(stat="identity",color = "violetred", fill = "violetred2")+
+  geom_bar(stat="identity",color = "violetred4", fill = "violetred")+
+  scale_fill_brewer(palette = "Blues")+
   coord_flip()+
   ylab("Difference between the Highest and lowest Net Worth") +
   xlab("Country")+
@@ -65,7 +65,8 @@ ggplot(data_byCountry, aes(x=reorder(country, range_worth),y=range_worth))+
   coord_flip()+
   ylab("Difference between the highest and lowest net worth") +
   xlab("Country")+
-  theme_bw ()
+  theme_bw()
+  
 
 # Q7 ----------------------------------------------------------------------
 
@@ -75,7 +76,7 @@ by_rank<-
   summarise(count=n()) %>% 
   filter(count>1) %>% 
   View()
-#As we can see in thsi table there are 19 ranks which more than one person
+#As we can see in this table, there are 19 ranks which more than one person
 
 
 # Q8 ----------------------------------------------------------------------
@@ -112,5 +113,5 @@ mapped_data <- joinCountryData2Map(net_worth_country, joinCode = "NAME",
                                    nameJoinColumn = "country",verbose = T)
 mapCountryData(mapped_data
                ,nameColumnToPlot="sum_worth", colourPalette = "terrain",
-               mapTitle = "Net Worth Per Country")
+               mapTitle = "Net Worth Per Country",oceanCol="slategray1")
 
