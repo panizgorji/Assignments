@@ -58,6 +58,14 @@ ggplot(data_byCountry, aes(x=country,y=range_worth))+
   xlab("Country")+
     theme_bw ()
 
+# Q6 ----------------------------------------------------------------------
+
+ggplot(data_byCountry, aes(x=reorder(country, range_worth),y=range_worth))+
+  geom_bar(stat="identity",color = "violetred4", fill = "violetred2")+
+  coord_flip()+
+  ylab("Difference between the highest and lowest net worth") +
+  xlab("Country")+
+  theme_bw ()
 
 
 
