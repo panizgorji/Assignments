@@ -67,5 +67,16 @@ ggplot(data_byCountry, aes(x=reorder(country, range_worth),y=range_worth))+
   xlab("Country")+
   theme_bw ()
 
+# Q7 ----------------------------------------------------------------------
+
+by_rank<-
+  data %>% 
+  group_by(X...rank) %>% 
+  summarise(count=n()) %>% 
+  filter(count>1) %>% 
+  View()
+#As we can see in thsi table there are 19 ranks which more than one person
+
+
 
 
