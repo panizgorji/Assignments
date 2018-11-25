@@ -78,5 +78,15 @@ by_rank<-
 #As we can see in thsi table there are 19 ranks which more than one person
 
 
+# Q8 ----------------------------------------------------------------------
+
+#First we group by rank and count the number of people in each rank
+by_rank<-data %>% 
+  group_by(X...rank) %>% 
+  summarise(count=n()) 
+
+#Then we add a column with the average rank
+mutate(by_rank,avg_rank=X...rank+(count-1)/2) %>% 
+  View()
 
 
