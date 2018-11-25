@@ -42,12 +42,21 @@ ggplot(data)+
 
 # Q4 ----------------------------------------------------------------------
 
-data %>% 
+data_byCountry <- data %>% 
   group_by(country) %>% 
   summarise(count=n(),range_worth=(max(net_worth)-min(net_worth))) %>% 
   filter(count>=6) %>% 
   arrange(range_worth) 
+
   
+# Q5 ----------------------------------------------------------------------
+
+ggplot(data_byCountry, aes(x=country,y=range_worth))+
+  geom_bar(stat="identity",color = "violetred", fill = "violetred2")+
+  coord_flip()+
+  ylab("Difference between the highest and lowest net worth") +
+  xlab("Country")+
+    theme_bw ()
 
 
 
