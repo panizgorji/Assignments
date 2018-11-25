@@ -54,7 +54,7 @@ data_byCountry <- data %>%
 ggplot(data_byCountry, aes(x=country,y=range_worth))+
   geom_bar(stat="identity",color = "violetred", fill = "violetred2")+
   coord_flip()+
-  ylab("Difference between the highest and lowest net worth") +
+  ylab("Difference between the Highest and lowest Net Worth") +
   xlab("Country")+
     theme_bw ()
 
@@ -89,4 +89,28 @@ by_rank<-data %>%
 mutate(by_rank,avg_rank=X...rank+(count-1)/2) %>% 
   View()
 
+
+# Q9 ----------------------------------------------------------------------
+
+install.packages("rworldmap")
+library(rworldmap)
+
+#First we add the log form of net worth
+net_worth_country<-group_by(data, country) %>% 
+  summarise(sum_worth=log(sum(net_worth))) 
+
+#Then we join our data and the world map by the nam eof countries
+mapped_data <- joinCountryData2Map(net_worth_country, joinCode = "NAME", 
+                                   nameJoinColumn = "country",verbose = T)
+
+#As we can see one country couldn't match because the non-matching name
+#which should be replaced
+net_worth_country$country<-recode(net_worth_country$country,
+                                  "Polynesia"="French Polynesia")
+# I join the data again
+mapped_data <- joinCountryData2Map(net_worth_country, joinCode = "NAME", 
+                                   nameJoinColumn = "country",verbose = T)
+mapCountryData(mapped_data
+               ,nameColumnToPlot="sum_worth", colourPalette = "terrain",
+               mapTitle = "Net Worth Per Country")
 
