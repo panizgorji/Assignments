@@ -1,32 +1,53 @@
 #start the assignment
+# I made some changes to the responses after the commit for each question
+# so the final version might be different from the individual commit for each questtion
+#add libraries
+
 #add libraries
 library(tidyverse)
 library(ggplot2)
 data<-read.csv("~/Documents/course/programming/forbes.csv")
+# It is surprising that the label of rank variable is X..Rank in my data
 
 # Part2-Q1 ----------------------------------------------------------------
+
+# In order to recode the age, net_worth and rank into numeric variables
+#I use function parse_number()
 data$age<-parse_number(data$age)
 data$X...rank<-parse_number(data$X...rank)
 data$net_worth<-parse_number(data$net_worth)
 
 # Q2 ----------------------------------------------------------------------
-#In order to remove the people witj net_worth less than 1 bilion we remove the people
+
+#In order to remove the people with net_worth less than 1 bilion I remove the people
 # with rank higher than 1571
-data_new<-filter(data,data$X...rank <= 1571)
+data<-filter(data,data$X...rank <= 1571)
+
+# Another possible solution is to remove net_worth higher than 82.1
+data<-filter(data,data$net_worth <= 82.1)
 
 # Q3 ----------------------------------------------------------------------
+
 #First we plot age against net_worth
-ggplot(data_new)+
+ggplot(data)+
   geom_point(aes(x=age,y=net_worth))
-#As we can see 39 missing values exist for age which are removes.
+#As we can see 39 missing values exist for age which are removed.  
 
 #then we plot age against log(net_worth)
-ggplot(data_new)+
+ggplot(data)+
   geom_point(aes(x=age,y=log(net_worth))) 
 #when we use log(net_worth) the plot is more informative since the observations for
-#lower values of net_worth (which contains the bigger portion of the data) is less dense
+#lower values of net_worth (which consists of the bigger portion of the data) is less dense
 #and easier to comprehend.
 
+# Q4 ----------------------------------------------------------------------
+
+data %>% 
+  group_by(country) %>% 
+  summarise(count=n(),range_worth=(max(net_worth)-min(net_worth))) %>% 
+  filter(count>=6) %>% 
+  arrange(range_worth) %>% 
+  
 
 
 
