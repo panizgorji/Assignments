@@ -46,7 +46,7 @@ data %>%
   group_by(country) %>% 
   summarise(count=n(),range_worth=(max(net_worth)-min(net_worth))) %>% 
   filter(count>=6) %>% 
-  arrange(range_worth) %>% 
+  arrange(range_worth) 
   
 
 
