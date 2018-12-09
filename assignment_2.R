@@ -1,6 +1,5 @@
 library(tidyverse)
 
-
 # Question 1 ------------------------------------------------------------------------------------------------------
 
 #' Tidy_df
@@ -111,6 +110,7 @@ filter_names<-function(data,Ref_data, name){
     inner_join(summarised_data, by = "word") %>%
     filter(percentage >= 75) %>% 
     select(id, text_id, name, percentage)
+  
 }
 
 filtered_names <- filter_names(austen_CapWords, austen_word_freqs, "name")
