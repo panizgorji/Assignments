@@ -149,4 +149,4 @@ count_names_per_book <- function(ref_data, data) {
     summarise(unique_names = length(unique(name)), name_occurrences = n())
 }
 filtered_names <- count_names_per_book(austen_text, filtered_names)
-View(filtered_names)
+
