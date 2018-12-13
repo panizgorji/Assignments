@@ -63,6 +63,7 @@ View(austen_text)
 #' column and used the code from previous question to put all words in one column and 
 #' then filter the words with first letters in capital (also the rows that contain no 
 #' word) and after generated new column for id and renamed the columns as needed.
+
 extract_possible_names<-function(data,text_column, id_column){
   data<-mutate(data, n =str_count(data[[text_column]], '\\w+'))
   max_words<-max(data$n)
@@ -71,7 +72,7 @@ extract_possible_names<-function(data,text_column, id_column){
                       remove = TRUE) 
   data_new<-gather(data_new,grep("word" , names(data_new)),
                    key = "variable", value = "value") 
-  data_new<-filter(data_new, data_new$value > 0 & str_detect(data_new$value,"^[A-Z]."))
+  data_new<-filter(data_new, data_new$value > 0 & str_detect(data_new$value,"\\b[A-Z]\\w+"))
   data_new<-rename(data_new,text_id=id, name=value)
   data_new<-mutate(data_new,id=rownames(data_new))
   data_new<-select(data_new,text_id, name, id)
@@ -103,16 +104,21 @@ filter_names<-function(data,Ref_data, name){
     rename(word = lowercase_name) %>% 
     summarise(n_present=n()) %>% 
     inner_join(Ref_data, by="word") %>% 
-    mutate(percentage = (n_present/ count) * 100)
-  
+    mutate(percentage = round((n_present/ count) * 100))
+  data_new<-filter(data_new, data_new$name!="Mr",
+                   data_new$name!="Mrs",
+                   data_new$name!="Miss",
+                   data_new$name!="Sir")
   data_new %>%
     rename(word = lowercase_name) %>%
     inner_join(summarised_data, by = "word") %>%
     filter(percentage >= 75) %>% 
     select(id, text_id, name, percentage)
+    
+# I found some other words starting with capital letter more that 75% of the time
+# which are not names such as "Mr", "Miss", "sir" that I  removed.
   
 }
-
 filtered_names <- filter_names(austen_CapWords, austen_word_freqs, "name")
 View(filtered_names)
 
@@ -120,7 +126,6 @@ View(filtered_names)
 # Question 4 ------------------------------------------------------------------------------------------------------
 
 # count_names_per_book
-#' Title
 #'
 #' @param ref_data is the original data with titles of books and text_id
 #' @param data is the table from ref_data with id, text_id and names (derived
@@ -143,6 +148,5 @@ count_names_per_book <- function(ref_data, data) {
     group_by(title) %>% 
     summarise(unique_names = length(unique(name)), name_occurrences = n())
 }
-
 filtered_names <- count_names_per_book(austen_text, filtered_names)
 View(filtered_names)
