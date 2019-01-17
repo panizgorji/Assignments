@@ -38,45 +38,42 @@ get_population_ranking <- function(){
   return(data_all)
   View(data_all)
 }
+
+#Test the funtion:
 example_1<-get_population_ranking()
 View(example_1)
 
-
+# Q-2 ---------------------------------------------------------------------
 #' Question 2: Retrieve Land Area
 #'
 #' @param country_link A character vector of one or more country_link urls
 #'
-#' @return
+#' @return A character vector 
 #' @export
 #'
 #' @examples
 get_land_area <- function(country_link){
   xpath <- str_c("//div[@id='","field-area","']/div[",2,"]/span[2]")
+  
   #download the file from country_link and execute the xpath query
   area_url = str_c(base_url, country_link)
-  area_data <- vector(length = length(country_link))
+  area_data_all <- vector(length = length(country_link))
   
   for (i in 1:length(country_link)) {
-    Temp1 <- read_html(download_html(area_url[i]))
-    Temp2 <- xml_find_all(Temp1, xpath)
-    area_data[i] <- xml_text(Temp2)
+    data_html <- read_html(download_html(area_url[i]))
+    area_data <- xml_find_all(data_html, xpath)
+    area_data_all[i] <- xml_text(area_data)
   }
-  return(area_data)
+  return(area_data_all)
 }
-# Testing the funtion:
-country_link <- example$country_link
-data<-get_land_area(country_link)
-View(data)
 
-data_bind<-cbind(example,data)
-View(data_bind)
-data_bind$data<-parse_number(data_bind$data)
-data_bind$data[12]<-1000000
-data_bind$population<-parse_number(data_bind$population)
-View(data_bind)
-data_bind <- mutate(data_bind, population_density = population / data)
+#Test the funtion:
+country_link <- example_1$country_link
+data_land<-get_land_area(country_link)
+View(data_land)
 
-View(data_bind)
+
+
 
 #' Question 3: Get Population Density
 #'
@@ -87,7 +84,15 @@ View(data_bind)
 get_population_density <- function(){
   
 }
+data_bind<-cbind(example,data)
+View(data_bind)
+data_bind$data<-parse_number(data_bind$data)
+data_bind$data[12]<-1000000
+data_bind$population<-parse_number(data_bind$population)
+View(data_bind)
+data_bind <- mutate(data_bind, population_density = population / data)
 
+View(data_bind)
 
 #' Question 4: Get All Provided Rankings
 #'
