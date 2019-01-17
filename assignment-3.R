@@ -72,27 +72,26 @@ country_link <- example_1$country_link
 data_land<-get_land_area(country_link)
 View(data_land)
 
-
-
+# Q-3 ---------------------------------------------------------------------
 
 #' Question 3: Get Population Density
 #'
-#' @return
+#' @return A data frame of 6 variables including population density of each country
 #' @export
 #'
 #' @examples
-get_population_density <- function(){
-  
+get_population_density <- function(example_1,data_land){
+  data_bind<-cbind(example_1,data_land)
+  data_bind$data_land<-parse_number(data_bind$data_land)
+  data_bind$data_land[12]<-"1000000"
+  data_bind$data_land<-parse_number(data_bind$data_land)
+  data_bind$population<-parse_number(data_bind$population)
+  data_bind <- mutate(data_bind, population_density = population / data_land)
+  View(data_bind)
 }
-data_bind<-cbind(example,data)
-View(data_bind)
-data_bind$data<-parse_number(data_bind$data)
-data_bind$data[12]<-1000000
-data_bind$population<-parse_number(data_bind$population)
-View(data_bind)
-data_bind <- mutate(data_bind, population_density = population / data)
 
-View(data_bind)
+# Test the function
+full_data<-get_population_density(example_1,data_land)
 
 #' Question 4: Get All Provided Rankings
 #'
