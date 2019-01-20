@@ -93,6 +93,8 @@ get_population_density <- function(example_1,data_land){
 # Test the function
 full_data<-get_population_density(example_1,data_land)
 
+
+# Q-4 ---------------------------------------------------------------------
 #' Question 4: Get All Provided Rankings
 #'
 #' @return
