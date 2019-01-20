@@ -113,15 +113,15 @@ get_rankings <- function(){
   characteristic <- xml_find_all(url_data2, xpath['characteristic'])
   characteristic_link <- xml_find_all(url_data2, xpath['characteristic_link'])
   data_all <- data.frame(characteristic = c(gsub(":","", sapply(characteristic,xml_text))), 
-                         characteristic_link = c(gsub("../","", sapply(characteristic_link, xml_text))))
+                         characteristic_link = c(gsub("\\../","", sapply(characteristic_link, xml_text))))
   data_all$characteristic<-tolower(data_all$characteristic)
   return(data_all)
-  View(data-all)
+  View(data_all)
 
 }
 #Test the function
-example2<-get_rankings()
-View(example2)
+rankings<-get_rankings()
+View(rankings)
 
 # Q-5 ---------------------------------------------------------------------
 #' Question 5 - Part 1: Get Ranking
@@ -129,7 +129,7 @@ View(example2)
 #' @param url The url of the ranking
 #' @param characteristic What this ranking is about
 #'
-#' @return
+#' @return A dataframe of countries' ranking in an specfied characteristic
 #' @export
 #'
 #' @examples
@@ -160,6 +160,7 @@ get_ranking <- function(url = "fields/335rank.html", characteristic = "populatio
   return(all_data2)
   View(all_data2)
 }
+#Test the function
 example3<-get_ranking(url = "fields/279rank.html", characteristic = "area")
 View(example3)
 
@@ -169,7 +170,7 @@ View(example3)
 #' @param xpath_field_id 
 #' @param item 
 #'
-#' @return
+#' @return A vector of values of different characteristics
 #' @export
 #'
 #' @examples
@@ -197,13 +198,27 @@ View(data)
 #'
 #' @param rankings Rankings from get_rankings (or a selection thereof)
 #'
-#' @return
+#' @return A dataframe of the countries and all their rankings
 #' @export
 #'
 #' @examples
 combine_rankings <- function(rankings){
+  current_rankings <- c()
+  # the first characteristic is assigned as the default
+  all_rankings <- get_ranking(as.character(rankings[1, "characteristic_link"]),
+                              as.character(rankings[1, "characteristic"]))
   
+  # start with second characteristic and continue
+  for (i in 2:nrow(rankings)){
+    url_var <- as.character(rankings[i, "characteristic_link"])
+    characteristic_var <- as.character(rankings[i, "characteristic"])
+    current_rankings <- get_ranking(url_var, characteristic_var)
+    full_rankings <- full_join(all_rankings, current_rankings, by="country")
+  }
+  
+  return(full_rankings)
 }
 
-
-
+# Test the function
+full_rankings <- combine_rankings(example2)
+View(full_rankings)
