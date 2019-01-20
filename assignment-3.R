@@ -80,19 +80,19 @@ View(data_land)
 #' @export
 #'
 #' @examples
-get_population_density <- function(example_1,data_land){
+get_population_density <- function(){
   data_bind<-cbind(example_1,data_land)
-  data_bind$data_land<-parse_number(data_bind$data_land)
-  data_bind$data_land[12]<-"1000000"
+  data_bind[12, "data_land"] <- 1000000
   data_bind$data_land<-parse_number(data_bind$data_land)
   data_bind$population<-parse_number(data_bind$population)
   data_bind <- mutate(data_bind, population_density = population / data_land)
-  View(data_bind)
+  data_bind <- replace(data_bind, is.na(data_bind), "Data Not Available")
+  return(data_bind)
 }
 
 # Test the function
-full_data<-get_population_density(example_1,data_land)
-
+full_data<-get_population_density()
+View(full_data)
 
 # Q-4 ---------------------------------------------------------------------
 #' Question 4: Get All Provided Rankings
@@ -119,9 +119,11 @@ get_rankings <- function(){
   View(data-all)
 
 }
+#Test the function
 example2<-get_rankings()
 View(example2)
 
+# Q-5 ---------------------------------------------------------------------
 #' Question 5 - Part 1: Get Ranking
 #'
 #' @param url The url of the ranking
@@ -131,7 +133,7 @@ View(example2)
 #' @export
 #'
 #' @examples
-
+#' 
 base_url <- "https://www.cia.gov/library/publications/the-world-factbook/"
 get_ranking <- function(url = "fields/335rank.html", characteristic = "population"){
   xpath_expressions <- c("country_link" = "//td[@class='region']/a/@href",
@@ -161,7 +163,6 @@ get_ranking <- function(url = "fields/335rank.html", characteristic = "populatio
 example3<-get_ranking(url = "fields/279rank.html", characteristic = "area")
 View(example3)
 
-
 #' Question 5 - Part 2: Get Country Characteristic
 #'
 #' @param country_link 
@@ -172,11 +173,26 @@ View(example3)
 #' @export
 #'
 #' @examples
+base_url <- "https://www.cia.gov/library/publications/the-world-factbook/"
 get_country_characteristic <- function(country_link, xpath_field_id = "field-area", item = 2){
-  #update the xpath and use similar code other than that
+  xpath <- str_c("//div[@id='",xpath_field_id,"']/div[",item,"]/span[2]")
+  #download the file from country_link and execute the xpath query
+  characteristics_url = str_c(base_url, country_link)
+  characteristics_data_all <- vector(length = length(country_link))
+  
+  for (i in 1:length(country_link)) {
+    characteristics_html <- read_html(download_html(characteristics_url[i]))
+    characteristics_data <- xml_find_all(characteristics_html, xpath)
+    characteristics_data_all[i] <- xml_text(characteristics_data)
+  }
+  return(characteristics_data_all)
 }
+# Test the funtion:
+country_link <- example_1$country_link
+data<-get_country_characteristic(country_link,"field-area",2)
+View(data)
 
-
+# Q-6 ---------------------------------------------------------------------
 #' Question 6: Combine Rankings
 #'
 #' @param rankings Rankings from get_rankings (or a selection thereof)
