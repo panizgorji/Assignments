@@ -48,7 +48,7 @@ View(example_1)
 #'
 #' @param country_link A character vector of one or more country_link urls
 #'
-#' @return A character vector 
+#' @return A character vector of the same length as the country_link parameter. 
 #' @export
 #'
 #' @examples
@@ -113,7 +113,7 @@ get_rankings <- function(){
   characteristic <- xml_find_all(url_data2, xpath['characteristic'])
   characteristic_link <- xml_find_all(url_data2, xpath['characteristic_link'])
   data_all <- data.frame(characteristic = c(gsub(":","", sapply(characteristic,xml_text))), 
-                         characteristic_link = c(gsub("\\../","", sapply(characteristic_link, xml_text))))
+                         characteristic_link = c(gsub("^../","", sapply(characteristic_link, xml_text))))
   data_all$characteristic<-tolower(data_all$characteristic)
   return(data_all)
   View(data_all)
