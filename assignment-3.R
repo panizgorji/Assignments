@@ -203,17 +203,17 @@ View(data)
 #'
 #' @examples
 combine_rankings <- function(rankings){
-  current_rankings <- c()
+  new_rankings <- c()
   # the first characteristic is assigned as the default
-  all_rankings <- get_ranking(as.character(rankings[1, "characteristic_link"]),
+  data_rankings <- get_ranking(as.character(rankings[1, "characteristic_link"]),
                               as.character(rankings[1, "characteristic"]))
   
   # start with second characteristic and continue
   for (i in 2:nrow(rankings)){
-    url_var <- as.character(rankings[i, "characteristic_link"])
-    characteristic_var <- as.character(rankings[i, "characteristic"])
-    current_rankings <- get_ranking(url_var, characteristic_var)
-    full_rankings <- full_join(all_rankings, current_rankings, by="country")
+    url_data <- as.character(rankings[i, "characteristic_link"])
+    characteristic_data <- as.character(rankings[i, "characteristic"])
+    new_rankings <- get_ranking(url_data, characteristic_data)
+    full_rankings <- full_join(data_rankings, new_rankings, by="country")
   }
   
   return(full_rankings)
